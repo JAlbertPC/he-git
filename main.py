@@ -32,7 +32,7 @@ def data(word):
 @app.route("/search", methods=['GET'])
 def search():
     stimulus = apineo4j.allStimulus()
-    return stimulus
+    return str(stimulus)
 
 
 if __name__ == "__main__":
