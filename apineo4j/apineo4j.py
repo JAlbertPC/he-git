@@ -52,3 +52,17 @@ def generateJSON(session, result):
         Argus.append(temporalJSON)
 
     return Argus
+
+
+def allStimulus():
+    # Create the driver
+    db_url = os.environ.get("GRAPHENEDB_BOLT_URL")
+    db_user = os.environ.get("GRAPHENEDB_BOLT_USER")
+    db_pass = os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
+    driver = GraphDatabase.driver(db_url, auth=(db_user, db_pass), encrypted=True)
+
+    # Create the session
+    session = driver.session()
+    result = session.run("MATCH(n:Estimulo) RETURN n")
+
+    return result
