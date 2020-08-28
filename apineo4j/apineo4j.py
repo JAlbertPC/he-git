@@ -4,7 +4,7 @@ import json
 import os
 
 
-# things to use: get, _id, _labels (list), _propierties
+# things to use: get, _id, _labels (list), _properties
 # {
 #   name: name of the node,
 #   status: PalabrasAsociadas/PalabraEstimulo,
@@ -54,7 +54,7 @@ def generateJSON(session, result):
     return Argus
 
 
-def allStimulus():
+def allStimulus(word):
     # Create the driver
     db_url = os.environ.get("GRAPHENEDB_BOLT_URL")
     db_user = os.environ.get("GRAPHENEDB_BOLT_USER")
@@ -63,6 +63,13 @@ def allStimulus():
 
     # Create the session
     session = driver.session()
-    result = session.run("MATCH(n:Estimulo) RETURN n")
+    #0 - 233
+    result = session.run("MATCH (n:Estimulo) WHERE n.name =~$letters RETURN n LIMIT 6", letters=(word+'.*'))
+    
+    Argus = []
+    for records in result:
+        name = records[0]._properties['name']
+        temporalJSON = {"name": name}
+        Argus.append(temporalJSON)
 
-    return result
+    return json.dumps(Argus, ensure_ascii=False, indent=4)
