@@ -18,7 +18,7 @@ def hello():
     return "<h1>Ingresa la palabra a buscar en la barra de direcciones</h1>" \
            "<p>https://graphora.herokuapp.com/graph/'Palabra'</p>" \
            "<h1>Ingresa letras para encontrar posibles resultados</h1>" \
-           "<p>https://graphora.herokuapp.com/graph/'Palabra'</p>"
+           "<p>https://graphora.herokuapp.com/search/'Letras'</p>"
 
 
 @app.route("/graph/<word>", methods=['GET'])
