@@ -4,12 +4,12 @@ from apineo4j import apineo4j
 
 app = Flask(__name__)
 PORT = 5000
-DEBUG = False
+DEBUG = True
 CORS(app)
 
 
 @app.errorhandler(404)
-def not_found():
+def not_found(error):
     return "<h1>Not Found</h1>"
 
 
@@ -29,10 +29,10 @@ def data(word):
         return "<h1>Palabra invalida</h1>"
 
 
-@app.route("/search", methods=['GET'])
-def search():
-    stimulus = apineo4j.allStimulus()
-    return str(stimulus)
+@app.route("/search/<letters>", methods=['GET'])
+def search(letters):
+    stimulus = apineo4j.allStimulus(letters)
+    return stimulus
 
 
 if __name__ == "__main__":
