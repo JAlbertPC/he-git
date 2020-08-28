@@ -16,7 +16,9 @@ def not_found(error):
 @app.route("/", methods=['GET'])
 def hello():
     return "<h1>Ingresa la palabra a buscar en la barra de direcciones</h1>" \
-           "<p>https://graphora.herokuapp.com/'Palabra'</p>"
+           "<p>https://graphora.herokuapp.com/graph/'Palabra'</p>" \
+           "<h1>Ingresa letras para encontrar posibles resultados</h1>" \
+           "<p>https://graphora.herokuapp.com/graph/'Palabra'</p>"
 
 
 @app.route("/graph/<word>", methods=['GET'])
