@@ -13,7 +13,7 @@ def not_found(error):
     return "<h1>Not Found</h1>"
 
 
-@app.route("/", methods=['GET'])
+@app.route("/", methods=["GET"])
 def hello():
     return "<h1>Ingresa la palabra a buscar en la barra de direcciones</h1>" \
            "<p>https://graphora.herokuapp.com/graph/'Palabra'</p>" \
@@ -21,7 +21,7 @@ def hello():
            "<p>https://graphora.herokuapp.com/search/'Letras'</p>"
 
 
-@app.route("/graph/<word>", methods=['GET'])
+@app.route("/graph/<word>", methods=["GET"])
 def data(word):
     result = apineo4j.getData(word)
 
@@ -31,11 +31,15 @@ def data(word):
         return "<h1>Palabra invalida</h1>"
 
 
-@app.route("/search/<letters>", methods=['GET'])
+@app.route("/search/<letters>", methods=["GET"])
 def search(letters):
     stimulus = apineo4j.allStimulus(letters)
     return stimulus
 
+@app.route("/table/<word>", methods=["GET"])
+def table(word):
+    tableJSON = apineo4j.generateTableJSON(word)
+    return tableJSON
 
 if __name__ == "__main__":
     app.run(port=PORT, debug=DEBUG)
