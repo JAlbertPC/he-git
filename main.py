@@ -4,7 +4,7 @@ from apineo4j import apineo4j
 
 app = Flask(__name__)
 PORT = 5000
-DEBUG = True
+DEBUG = False
 CORS(app)
 
 
