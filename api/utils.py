@@ -6,7 +6,7 @@ import os
 
 # Functions
 #   Graph
-def getData(word):
+def getGraph(word):
     # Create the driver
     db_url = os.environ.get("GRAPHENEDB_BOLT_URL")
     db_user = os.environ.get("GRAPHENEDB_BOLT_USER")
@@ -16,14 +16,14 @@ def getData(word):
     # Create the session
     session = driver.session()
     result = session.run("MATCH (n)-[r:ASOCIA_CON]-(p:Estimulo{name:$Estimulo}) RETURN n, r, p", Estimulo=word)
-    exportJSON = generateJSON(session, result)
+    JSON = getGraphInformation(session, result)
     session.close()
     driver.close()
 
-    return json.dumps(exportJSON, ensure_ascii=False, indent=4)
+    return json.dumps(JSON, ensure_ascii=False, indent=4)
 
 
-def generateJSON(session, result):
+def getGraphInformation(session, result):
     # {
     #   name: name of the node,
     #   status: PalabrasAsociadas/PalabraEstimulo,
@@ -37,16 +37,20 @@ def generateJSON(session, result):
     for records in result:
         flag = False
         name = records["n"]._properties["name"]
-        status = list(records["n"]._labels)[0]
+
+        if (list(records["n"]._labels)[0] == "PalabrasAsociadas"):
+            status = "asociada"
+        else:
+            status = "estimulo"
 
         if records["r"].nodes[0]._properties["name"] != records["p"]._properties["name"]:
-            direction = "In"
+            direction = "in"
         else:
-            direction = "Out"
+            direction = "out"
         
         for result in Argus:
             if result["name"] == records["n"]._properties["name"]:
-                result["direction"] = ["In", "Out"]
+                result["direction"] = "in-out"
                 flag = True
                 break
 
@@ -54,7 +58,7 @@ def generateJSON(session, result):
             continue
         
         nodes = []
-        if (status == "PalabraEstimulo") or (status == "Estimulo"):
+        if status == "estimulo":
             other_nodes = session.run("MATCH (n)-[r:ASOCIA_CON]-(p:Estimulo{name:$Estimulo}) RETURN n, r, p LIMIT 2", Estimulo=name)
             node1, node2 = other_nodes.values()
             nodes = [node1[0]._properties["name"], node2[0]._properties["name"]]
@@ -66,7 +70,7 @@ def generateJSON(session, result):
 
 
 #   Table
-def generateTableJSON(word):
+def getTable(word):
     # Create the driver
     db_url = os.environ.get("GRAPHENEDB_BOLT_URL")
     db_user = os.environ.get("GRAPHENEDB_BOLT_USER")
@@ -116,7 +120,7 @@ def generateTableJSON(word):
 
 
 #   Search
-def allStimulus(word):
+def getStimulus(word):
     # Create the driver
     db_url = os.environ.get("GRAPHENEDB_BOLT_URL")
     db_user = os.environ.get("GRAPHENEDB_BOLT_USER")
@@ -125,7 +129,7 @@ def allStimulus(word):
 
     # Create the session
     session = driver.session()
-    #0 - 233
+    # 0 - 233
     result = session.run("MATCH (n:Estimulo) WHERE n.name =~$letters RETURN n LIMIT 6", letters=(word+'.*'))
     
     Argus = []
@@ -138,3 +142,10 @@ def allStimulus(word):
     driver.close()
 
     return json.dumps(Argus, ensure_ascii=False, indent=4)
+
+
+def validation(data):
+    if data != "[]":
+        return data
+    else:
+        return "<h1>Palabra invalida</h1>"
