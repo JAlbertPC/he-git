@@ -96,7 +96,7 @@ def getTable(word):
 
     Argus = []
     for records in result:
-        if(records["r"].nodes[0]._properties["name"] != "abeja"):
+        if(records["r"].nodes[0]._properties["name"] != word):
             name = records["r"].nodes[0]._properties["name"]
         else:
             name = records["r"].nodes[1]._properties["name"]
