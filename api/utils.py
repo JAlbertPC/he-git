@@ -107,8 +107,8 @@ def getTable(word):
             direction = "In"
 
         frecuency = records["r"]._properties["frecuency"]
-        time = records["r"]._properties["time"]
-        association = records["r"]._properties["association"]
+        time = (records["r"]._properties["time"]).replace(",", ".")
+        association = (records["r"]._properties["association"]).replace(",", ".")
         
         temporalJSON = {"name": name, "direction": direction, "frecuency": frecuency, "time": time, "association": association}
         Argus.append(temporalJSON)
